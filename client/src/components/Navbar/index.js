@@ -19,15 +19,7 @@ class Nav extends Component {
             outDuration: 200,
             preventScrolling: true
           }}
-        >
-          <NavItem>
-          <Row>
-          <Col className="valign-wrapper">
-              <Button node="button"style={{ marginRight: '5px'}} waves ="light">Scrape Articles </Button>
-              <Button node="button"style={{ marginRight: '5px' }} waves ="light">Clear Articles </Button>
-            </Col>
-            </Row>
-          </NavItem>
+    >
           <NavItem href="/login">
             Log In
           </NavItem>
