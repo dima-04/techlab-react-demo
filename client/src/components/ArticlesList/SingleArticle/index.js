@@ -12,7 +12,7 @@ function SingleArticle(props) {
           <a style={{marginRight: '5px'}} target="_blank" rel={props.article.link} href={props.article.link}>
             <Button variant="primary">View</Button> 
           </a>
-          <Button variant="primary">Save</Button>
+          <Button variant="primary" onClick={props.buttonHandler} data-object={JSON.stringify(props.article)}>{props.buttonText}</Button>
         </Col>
       </Row>
       <Row>

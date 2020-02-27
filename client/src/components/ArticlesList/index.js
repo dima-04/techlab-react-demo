@@ -7,7 +7,7 @@ function ArticlesList(props) {
       <div>
         <h3>{props.header}</h3>
         {props.articles.map(article =>
-          <SingleArticle article={article} />)}
+          <SingleArticle article={article} buttonHandler={props.buttonHandler} buttonText={props.buttonText}/>)}
 
       </div>);
   } else {

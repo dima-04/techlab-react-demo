@@ -8,14 +8,17 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
+import MyArticles from "./pages/MyArticles";
 
 class App extends Component {
 
   constructor() {
     super();
+    const token = localStorage.getItem("jwtToken");
+    const decoded = token != null ? jwt_decode(token) : {};
     this.state = {
-      user: null,
-      token: null,
+      user: decoded,
+      token: token,
       redirect: false
     }
     this.handleLogin = this.handleLogin.bind(this);
@@ -30,12 +33,14 @@ class App extends Component {
 
   handleLogin(token) {
     token = token.replace("Bearer ", "");
+    localStorage.setItem("jwtToken", token);
     const decoded = jwt_decode(token);
     this.setState({user: decoded, token: token, redirect: true});
   }
 
   handleLogout() {
-    this.setState({user: null, token: null, redirect: true});
+    localStorage.removeItem("jwtToken");
+    this.setState({user: {}, token: null, redirect: true});
   }
 
   setRedirect = () => {
@@ -52,12 +57,13 @@ class App extends Component {
   render() {
     return (
       <Container>
-        <Nav />
+        <Nav user={this.state.user}/>
         <h4>Welcome to the Newest Tech News!!</h4>
           <Router>
             {this.renderRedirect()}
             <div className="App">
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={() => <Home user={this.state.user} />} />
+              <Route exact path="/myarticles" component={() => <MyArticles user={this.state.user} />} />
               <Route exact path="/register" component={() => <Register handleLogin={this.handleLogin}/>} />
               <Route exact path="/login" component={() => <Login handleLogin={this.handleLogin} />} />
               <Route exact path="/logout" component={() => <Logout logout={this.handleLogout} />} />

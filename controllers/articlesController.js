@@ -1,5 +1,6 @@
 var cheerio = require("cheerio");
 var axios = require("axios");
+const db = require("../models");
 
 module.exports = {
   scrapeArticles: function (req, res) {
@@ -22,7 +23,6 @@ module.exports = {
 
         // In the currently selected element, look at its child elements (i.e., its a-tags),
         // then save the values for any "href" attributes that the child elements may have
-        var id = $(element).find("a").attr("href").replace(/\//g, '_').replace(/.html/g, '');
         var link = "https://www.nytimes.com/" + $(element).find("a").attr("href");
 
         // Save these results in an object that we'll push into the results array we defined earlier
@@ -33,14 +33,25 @@ module.exports = {
         //   summary: summary
         // });
         articles.push({
-          _id: id,
-            title: title,
-              link: link,
-                summary: summary
+          title: title,
+          link: link,
+          summary: summary
         })
       });
 
       res.send(articles)
     });
+  },
+  getSavedArticle: function (req, res) {
+    db.Articles
+    .find({userId: req.query.userId})
+    .then(dbArticles => res.json(dbArticles))
+    .catch(err => res.status(422).json(err));
+  },
+  saveArticle: function (req, res) {
+    db.Articles
+    .create(req.body)
+    .then(dbArticlesModel => res.json(dbArticlesModel))
+    .catch(err => res.status(422).json(err));
   }
 };
