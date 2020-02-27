@@ -26,7 +26,6 @@ class Home extends Component {
         return (
             <div>
               <ArticlesList header={this.state.header} articles={this.state.selectedArticles}/>
-
             </div>
         );
     }

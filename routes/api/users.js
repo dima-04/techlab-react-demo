@@ -24,7 +24,27 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then(user => res.json(user))
+            .then(user => 
+              {
+                const payload = {
+                  id: user.id,
+                  name: user.name
+                };
+                // Sign token
+                jwt.sign(
+                  payload,
+                  keys.secretOrKey,
+                  {
+                    expiresIn: 31556926
+                  },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
+              })
             .catch(err => res.status(500).send(err));
         });
       });
