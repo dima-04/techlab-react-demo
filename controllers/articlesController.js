@@ -53,5 +53,12 @@ module.exports = {
     .create(req.body)
     .then(dbArticlesModel => res.json(dbArticlesModel))
     .catch(err => res.status(422).json(err));
+  },
+  deleteArticle: function(req, res) {
+    db.Articles
+      .findById({ _id: req.params.id })
+      .then(dbArticlesModel => dbArticlesModel.remove())
+      .then(dbArticlesModel => res.json(dbArticlesModel))
+      .catch(err => res.status(422).json(err));
   }
 };

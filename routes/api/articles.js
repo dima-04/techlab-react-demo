@@ -8,4 +8,7 @@ router.route("/myarticles")
     .post(articlesController.saveArticle)
     .get(articlesController.getSavedArticle)
 
+router.route("/myarticles/:id")
+    .delete(articlesController.deleteArticle)
+
     module.exports = router;
