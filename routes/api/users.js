@@ -57,7 +57,7 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
   User.findOne({ email }).then(user => {
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" });
+      return res.status(404).send("Incorrect email or password.");
     }
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
@@ -83,7 +83,7 @@ router.post("/login", (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ passwordincorrect: "Incorrect username or password incorrect" });
+          .send("Incorrect email or password.");
       }
     });
   });

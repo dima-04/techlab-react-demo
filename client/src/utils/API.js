@@ -7,5 +7,8 @@ export default {
   },
   registerUser: function(data) {
     return axios.post("/api/users/register", data);
+  },
+  login: function(data) {
+    return axios.post("/api/users/login", data);
   }
 }

@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import './App.css';
 import { Container } from 'react-materialize';
 import Nav from './components/Navbar';
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 
 class App extends Component {
 
@@ -13,15 +15,38 @@ class App extends Component {
     super();
     this.state = {
       user: null,
-      token: null
+      token: null,
+      redirect: false
     }
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  componentDidMount() {
+    const newState = {...this.state};
+    newState.redirect = false;
+    this.setState(newState);
   }
 
   handleLogin(token) {
     token = token.replace("Bearer ", "");
     const decoded = jwt_decode(token);
-    this.setState({user: decoded, token: token});
+    this.setState({user: decoded, token: token, redirect: true});
+  }
+
+  handleLogout() {
+    this.setState({user: null, token: null, redirect: true});
+  }
+
+  setRedirect = () => {
+    this.setState({
+      redirect: true
+    })
+  }
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to='/' />
+    }
   }
 
   render() {
@@ -29,18 +54,15 @@ class App extends Component {
       <Container>
         <Nav />
         <h4>Welcome to the Newest Tech News!!</h4>
-        <div className="largeContainer">
-
           <Router>
+            {this.renderRedirect()}
             <div className="App">
               <Route exact path="/" component={Home} />
               <Route exact path="/register" component={() => <Register handleLogin={this.handleLogin}/>} />
-              {/* <Route exact path="/login" component={Login} />
-              <Route exact path="/logout" component={Logout} /> */}
+              <Route exact path="/login" component={() => <Login handleLogin={this.handleLogin} />} />
+              <Route exact path="/logout" component={() => <Logout logout={this.handleLogout} />} />
             </div>
           </Router>
-
-        </div>
       </Container>
     );
   }
